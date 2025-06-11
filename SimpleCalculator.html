@@ -1,0 +1,308 @@
+<!doctype html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta http-equiv="X-UA-Compatible" content="IE Edge">
+
+        <title>Calculator</title>
+        <style>
+            * { 
+                margin: 0;
+                padding: 0;
+                box-sizing: border-box;
+                background-color: #ecf0f3;
+                font-family: sans-serif;
+                outline: none;
+            }
+
+            .container {
+                height: 100vh;
+                display: flex;
+                justify-content: center;
+                align-items: center;
+            }
+
+            .Calculator {
+                background-color: #ecf0f3;
+                padding: 15px;
+                border-radius: 30px;
+                box-shadow: inset 5px 5px 12px #ffffff, 5px 5px 12px rgba(0, 0, 0, 0.16);
+                display: grid;
+                grid-template-columns: repeat(4, 68px);
+            }
+
+            input {
+                grid-column: span 4;
+                height: 70px;
+                width: 260px;
+                background-color: #ecf0f3;
+                box-shadow: inset -5px -5px 12px #ffffff, inset 5px 5px 12px rgba(0, 0, 0, 0.16);
+                border: none;
+                border-radius: 30px;
+                color: rgba(70, 70, 70);
+                font-size: 50px;
+                text-align: end;
+                margin: auto;
+                margin-top: 40px;
+                margin-bottom: 30px;
+                padding: 20px;
+                transition: all 0.3s ease;
+                overflow: hidden;
+            }
+
+            input:focus {
+                box-shadow: inset -8px -8px 15px #ffffff, inset 8px 8px 15px rgba(0, 0, 0, 0.2);
+                color: #333;
+            }
+
+            button {
+                height: 48px;
+                width: 48px;
+                background-color: #ecf0f3;
+                box-shadow: -5px -5px 12px #ffffff, 5px 5px 12px rgba(0, 0, 0, 0.16);
+                border: none;
+                border-radius: 50%;
+                margin: 8px;
+                font-size: 16px;
+                cursor: pointer;
+                transition: all 0.2s ease;
+                color: #666;
+                font-weight: 500;
+            }
+
+            button:hover {
+                transform: translateY(-2px);
+                box-shadow: -8px -8px 15px #ffffff, 8px 8px 15px rgba(0, 0, 0, 0.2);
+                color: #333;
+            }
+
+            button:active {
+                transform: translateY(0px);
+                box-shadow: inset -5px -5px 12px #ffffff, inset 5px 5px 12px rgba(0, 0, 0, 0.16);
+                transition: all 0.1s ease;
+            }
+
+            button.pressed {
+                transform: translateY(0px);
+                box-shadow: inset -5px -5px 12px #ffffff, inset 5px 5px 12px rgba(0, 0, 0, 0.16);
+                transition: all 0.1s ease;
+                background-color: #e6eaed;
+            }
+
+            .equal {
+                width: 115px;
+                border-radius: 40px;
+                background-color: #ecf0f3;
+                box-shadow: -5px -5px 12px #ffffff, 5px 5px 12px rgba(0, 0, 0, 0.16);
+                transition: all 0.2s ease;
+                background: linear-gradient(135deg, #19c500 0%, #21996c 100%);
+                color: white !important;
+                font-weight: bold;
+            }
+
+            .equal:hover {
+                transform: translateY(-2px);
+                box-shadow: -8px -8px 15px #ffffff, 8px 8px 15px rgba(0, 0, 0, 0.25);
+                background: linear-gradient(135deg, #19c500 0%, #21996c 100%);
+                color: white !important;
+            }
+
+            .equal:active {
+                transform: translateY(0px);
+                box-shadow: inset -5px -5px 12px rgba(255, 255, 255, 0.3), inset 5px 5px 12px rgba(0, 0, 0, 0.3);
+                color: white !important;
+            }
+        </style>
+    </head>
+
+<!-- Made by Bansi Jhala
+Student at GLS University, Ahmedabad, Gujarat, India
+email: bansijhala@yahoo.com
+instagram: https://www.instagram.com/bansijhala/
+linkedin: https://www.linkedin.com/in/bansijhala/
+github: https://github.com/bansi-png -->
+
+    <body>
+        <div class="container">
+            <div class="Calculator">
+                <input type="text" placeholder="0" id="outputscreen" readonly>
+                <button onclick="Clear()">C</button>
+                <button onclick="del()">Del</button>
+                <button onclick="display('%')">%</button>
+                <button onclick="display('/')">/</button>
+                <button onclick="display('7')">7</button>
+                <button onclick="display('8')">8</button>
+                <button onclick="display('9')">9</button>
+                <button onclick="display('*')">*</button>
+                <button onclick="display('4')">4</button>
+                <button onclick="display('5')">5</button>
+                <button onclick="display('6')">6</button>
+                <button onclick="display('-')">-</button>
+                <button onclick="display('1')">1</button>
+                <button onclick="display('2')">2</button>
+                <button onclick="display('3')">3</button>
+                <button onclick="display('+')">+</button>
+                <button onclick="display('.')">.</button>
+                <button onclick="display('0')">0</button>
+                <button onclick="Calculate()" class="equal">=</button>
+            </div>
+        </div>
+
+        <script type="text/javascript">
+            let outputScreen = document.getElementById("outputscreen");
+            let fullExpression = "";
+            let justCalculated = false;
+            let operatorEntered = false;
+            
+            function display(num) {
+                if (['+', '-', '*', '/', '%'].includes(num)) {
+                    if (justCalculated) {
+                        fullExpression = outputScreen.value + num;
+                        justCalculated = false;
+                    } else {
+                        fullExpression += num;
+                    }
+                    outputScreen.value = num;
+                    operatorEntered = true;
+                } else {
+                    if (justCalculated) {
+                        fullExpression = num;
+                        outputScreen.value = num;
+                        justCalculated = false;
+                        operatorEntered = false;
+                    } else if (operatorEntered) {
+                        if (outputScreen.value.length < 15) {
+                            fullExpression += num;
+                            outputScreen.value = num;
+                            operatorEntered = false;
+                        }
+                    } else {
+                        if (outputScreen.value.length < 15) {
+                            fullExpression += num;
+                            outputScreen.value += num;
+                        }
+                    }
+                }
+                adjustFontSize();
+            }
+
+            function Calculate() {
+                try {
+                    if (fullExpression === "") return;
+                    
+                    outputScreen.value = fullExpression;
+                    
+                    setTimeout(() => {
+                        outputScreen.style.transform = 'translateY(-20px)';
+                        outputScreen.style.opacity = '0.5';
+                        
+                        setTimeout(() => {
+                            const result = eval(fullExpression);
+                            outputScreen.value = result;
+                            fullExpression = result.toString();
+                            justCalculated = true;
+                            operatorEntered = false;
+                            
+                            outputScreen.style.transform = 'translateY(0)';
+                            outputScreen.style.opacity = '1';
+                            adjustFontSize();
+                        }, 300);
+                    }, 500);
+                    
+                } catch(err) {
+                    alert("Invalid expression");
+                    Clear();
+                }
+            }
+
+            function Clear() {
+                outputScreen.value = "";
+                fullExpression = "";
+                justCalculated = false;
+                operatorEntered = false;
+                resetFontSize();
+            }
+
+            function del() {
+                if (justCalculated) {
+                    Clear();
+                    return;
+                }
+                
+                if (outputScreen.value.length > 0) {
+                    outputScreen.value = outputScreen.value.slice(0, -1);
+                    fullExpression = fullExpression.slice(0, -1);
+                    adjustFontSize();
+                }
+            }
+
+            function adjustFontSize() {
+                const length = outputScreen.value.length;
+                let fontSize;
+                
+                if (length <= 6) {
+                    fontSize = '50px';
+                } else if (length <= 8) {
+                    fontSize = '40px';
+                } else if (length <= 10) {
+                    fontSize = '32px';
+                } else if (length <= 12) {
+                    fontSize = '26px';
+                } else if (length <= 15) {
+                    fontSize = '22px';
+                } else {
+                    fontSize = '18px';
+                }
+                
+                outputScreen.style.fontSize = fontSize;
+            }
+
+            function resetFontSize() {
+                outputScreen.style.fontSize = '50px';
+            }
+
+            document.addEventListener('keydown', function(event) {
+                const key = event.key;
+                
+                if ('0123456789+-*/.%='.includes(key) || key === 'Enter' || key === 'Backspace' || key === 'Delete' || key === 'Escape') {
+                    event.preventDefault();
+                }
+                
+                let targetButton = null;
+                
+                if ('0123456789+-*/.%'.includes(key)) {
+                    display(key);
+                    targetButton = Array.from(document.querySelectorAll('button')).find(btn => btn.textContent === key);
+                } else if (key === 'Enter' || key === '=') {
+                    Calculate();
+                    targetButton = document.querySelector('.equal');
+                } else if (key === 'Backspace' || key === 'Delete') {
+                    del();
+                    targetButton = Array.from(document.querySelectorAll('button')).find(btn => btn.textContent === 'Del');
+                } else if (key === 'Escape' || key.toLowerCase() === 'c') {
+                    Clear();
+                    targetButton = Array.from(document.querySelectorAll('button')).find(btn => btn.textContent === 'C');
+                }
+                
+                if (targetButton) {
+                    targetButton.classList.add('pressed');
+                    setTimeout(() => {
+                        targetButton.classList.remove('pressed');
+                    }, 150);
+                }
+            });
+
+            window.addEventListener('load', function() {
+                outputScreen.focus();
+            });
+
+            document.querySelectorAll('button').forEach(button => {
+                button.addEventListener('click', function() {
+                    setTimeout(() => outputScreen.focus(), 10);
+                });
+            });
+        </script>
+
+    </body>
+</html>
