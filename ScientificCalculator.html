@@ -1,0 +1,537 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Scientific Calculator</title>
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            padding: 0;
+            margin: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            background: linear-gradient(135deg, #142f44, #1d3849);
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        .container {
+            width: min(500px, 90vw);
+            padding: 25px;
+            border-radius: 20px;
+            background: #1d3849;
+            box-shadow: 
+                20px 20px 40px rgba(0, 0, 0, 0.4),
+                -10px -10px 20px rgba(162, 187, 207, 0.1),
+                inset 2px 2px 4px rgba(162, 187, 207, 0.05);
+            border: 1px solid rgba(162, 187, 207, 0.1);
+        }
+
+        .display {
+            margin-bottom: 20px;
+            position: relative;
+        }
+
+        .display-container {
+            background: #142f44;
+            border-radius: 15px;
+            box-shadow: 
+                inset 8px 8px 16px rgba(0, 0, 0, 0.3),
+                inset -4px -4px 8px rgba(32, 91, 122, 0.2);
+            padding: 15px 20px;
+            min-height: 80px;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+
+        #equation {
+            font-size: 16px;
+            color: rgba(162, 187, 207, 0.7);
+            text-align: right;
+            min-height: 20px;
+            font-family: 'Courier New', monospace;
+            letter-spacing: 0.5px;
+            margin-bottom: 5px;
+        }
+
+        #screen {
+            width: 100%;
+            font-size: 28px;
+            font-weight: 300;
+            outline: none;
+            border: none;
+            text-align: right;
+            background: transparent;
+            color: #a2bbcf;
+            font-family: 'Courier New', monospace;
+            letter-spacing: 1px;
+        }
+
+        #screen::placeholder {
+            color: rgba(162, 187, 207, 0.5);
+        }
+
+        .btns {
+            display: grid;
+            grid-template-columns: repeat(6, 1fr);
+            gap: 12px;
+        }
+
+        .btn {
+            height: 60px;
+            font-size: 16px;
+            font-weight: 500;
+            border: none;
+            outline: none;
+            border-radius: 12px;
+            background: #205b7a;
+            color: #a2bbcf;
+            cursor: pointer;
+            transition: all 0.15s ease;
+            box-shadow: 
+                6px 6px 12px rgba(0, 0, 0, 0.3),
+                -3px -3px 6px rgba(32, 91, 122, 0.3);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            user-select: none;
+        }
+
+        .btn:hover {
+            background: #2a6b8f;
+            transform: translateY(-1px);
+            box-shadow: 
+                8px 8px 16px rgba(0, 0, 0, 0.4),
+                -4px -4px 8px rgba(32, 91, 122, 0.4);
+        }
+
+        .btn:active {
+            transform: translateY(1px);
+            box-shadow: 
+                inset 4px 4px 8px rgba(0, 0, 0, 0.3),
+                inset -2px -2px 4px rgba(32, 91, 122, 0.2);
+        }
+
+        .btn.operator {
+            background: #32597a;
+            color: #ffffff;
+        }
+
+        .btn.operator:hover {
+            background: #3d6687;
+        }
+
+        .btn.special {
+            background: #1d4a5f;
+            color: #a2bbcf;
+        }
+
+        .btn.special:hover {
+            background: #235a70;
+        }
+
+        .btn.equals {
+            background: linear-gradient(135deg, #49a109, #a6b992);
+            color: #ffffff;
+            font-weight: bold;
+            grid-column: span 1;
+        }
+
+        .btn.equals:hover {
+            background: linear-gradient(135deg, #49a109, #a6b992);
+        }
+
+        .btn.clear {
+            background: #8b3a3a;
+            color: #ffffff;
+        }
+
+        .btn.clear:hover {
+            background: #a04545;
+        }
+
+        .superscript {
+            position: relative;
+            bottom: 0.4em;
+            font-size: 0.8em;
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                width: 95vw;
+                padding: 20px;
+            }
+            
+            .btns {
+                gap: 8px;
+            }
+            
+            .btn {
+                height: 50px;
+                font-size: 14px;
+            }
+            
+            #screen {
+                font-size: 24px;
+            }
+            
+            #equation {
+                font-size: 14px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .container {
+                width: 98vw;
+                padding: 15px;
+            }
+            
+            .btns {
+                gap: 6px;
+            }
+            
+            .btn {
+                height: 45px;
+                font-size: 12px;
+            }
+            
+            #screen {
+                font-size: 20px;
+            }
+            
+            #equation {
+                font-size: 12px;
+            }
+            
+            .display-container {
+                padding: 12px 15px;
+                min-height: 70px;
+            }
+        }
+
+        @media (max-width: 360px) {
+            .btn {
+                height: 40px;
+                font-size: 11px;
+            }
+            
+            #screen {
+                font-size: 18px;
+            }
+            
+            #equation {
+                font-size: 11px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <div class="display">
+            <div class="display-container">
+                <div id="equation"></div>
+                <input type="text" id="screen" placeholder="0" readonly>
+            </div>
+        </div>
+
+        <div class="btns">
+            <button class="btn clear" onclick="clearEntry()">CE</button>
+            <button class="btn special" onclick="factorial()">x!</button>
+            <button class="btn special" onclick="appendToScreen('(')">(</button>
+            <button class="btn special" onclick="appendToScreen(')')">)</button>
+            <button class="btn operator" onclick="appendToScreen('%')">%</button>
+            <button class="btn clear" onclick="clearAll()">AC</button>
+
+            <button class="btn special" onclick="trigFunction('sin')">sin</button>
+            <button class="btn special" onclick="insertConstant('π')">π</button>
+            <button class="btn" onclick="appendToScreen('7')">7</button>
+            <button class="btn" onclick="appendToScreen('8')">8</button>
+            <button class="btn" onclick="appendToScreen('9')">9</button>
+            <button class="btn operator" onclick="appendToScreen('/')">÷</button>
+
+            <button class="btn special" onclick="trigFunction('cos')">cos</button>
+            <button class="btn special" onclick="trigFunction('log')">log</button>
+            <button class="btn" onclick="appendToScreen('4')">4</button>
+            <button class="btn" onclick="appendToScreen('5')">5</button>
+            <button class="btn" onclick="appendToScreen('6')">6</button>
+            <button class="btn operator" onclick="appendToScreen('*')">×</button>
+
+            <button class="btn special" onclick="trigFunction('tan')">tan</button>
+            <button class="btn special" onclick="squareRoot()">√</button>
+            <button class="btn" onclick="appendToScreen('1')">1</button>
+            <button class="btn" onclick="appendToScreen('2')">2</button>
+            <button class="btn" onclick="appendToScreen('3')">3</button>
+            <button class="btn operator" onclick="appendToScreen('-')">-</button>
+
+            <button class="btn special" onclick="insertConstant('e')">e</button>
+            <button class="btn special" onclick="powerFunction()">x<span class="superscript">y</span></button>
+            <button class="btn" onclick="appendToScreen('0')">0</button>
+            <button class="btn" onclick="appendToScreen('.')">.</button>
+            <button class="btn equals" onclick="calculate()">=</button>
+            <button class="btn operator" onclick="appendToScreen('+')">+</button>
+        </div>
+    </div>
+
+    <script>
+        let screen = document.getElementById('screen');
+        let equation = document.getElementById('equation');
+        let currentInput = '';
+        let waitingForOperand = false;
+        let pendingOperation = null;
+        let pendingValue = null;
+
+        function formatNumber(num) {
+            if (num === null || num === undefined || isNaN(num)) return '0';
+            
+            let str = num.toString();
+            
+            if (Math.abs(num) >= 1e15 || (Math.abs(num) < 1e-6 && num !== 0)) {
+                return num.toExponential(6);
+            }
+            
+            if (str.length > 20) {
+                if (str.includes('.')) {
+                    let decimalIndex = str.indexOf('.');
+                    let integerPart = str.substring(0, decimalIndex);
+                    if (integerPart.length >= 15) {
+                        return num.toExponential(6);
+                    } else {
+                        let remainingChars = 19 - integerPart.length;
+                        return parseFloat(num.toFixed(remainingChars)).toString();
+                    }
+                } else {
+                    return num.toExponential(6);
+                }
+            }
+            
+            return str;
+        }
+
+        function updateScreen(value = currentInput) {
+            screen.value = formatNumber(parseFloat(value)) || value || '0';
+        }
+
+        function updateEquation(expr) {
+            equation.textContent = expr || '';
+        }
+
+        function appendToScreen(value) {
+            if (waitingForOperand) {
+                currentInput = value;
+                waitingForOperand = false;
+            } else {
+                currentInput = currentInput === '0' ? value : currentInput + value;
+            }
+            updateScreen();
+            updateEquation(currentInput);
+        }
+
+        function insertConstant(constant) {
+            let value;
+            switch(constant) {
+                case 'π':
+                    value = Math.PI.toString();
+                    break;
+                case 'e':
+                    value = Math.E.toString();
+                    break;
+                default:
+                    return;
+            }
+            
+            if (waitingForOperand) {
+                currentInput = value;
+                waitingForOperand = false;
+            } else {
+                currentInput = currentInput === '0' ? value : currentInput + value;
+            }
+            updateScreen();
+            updateEquation(currentInput);
+        }
+
+        function clearAll() {
+            currentInput = '0';
+            pendingOperation = null;
+            pendingValue = null;
+            waitingForOperand = false;
+            updateScreen();
+            updateEquation('');
+        }
+
+        function clearEntry() {
+            if (currentInput.length > 1) {
+                currentInput = currentInput.slice(0, -1);
+            } else {
+                currentInput = '0';
+            }
+            updateScreen();
+            updateEquation(currentInput === '0' ? '' : currentInput);
+        }
+
+        function calculate() {
+            try {
+                let originalEquation = currentInput;
+                
+                let expression = currentInput;
+                
+                expression = expression
+                    .replace(/×/g, '*')
+                    .replace(/÷/g, '/')
+                    .replace(/\^/g, '**');
+                
+                expression = expression.replace(/(\d+(\.\d+)?)%/g, '($1/100)');
+                
+                let result = Function('"use strict"; return (' + expression + ')')();
+                
+                if (!isFinite(result)) {
+                    throw new Error('Invalid calculation');
+                }
+                
+                updateEquation(originalEquation + ' =');
+                currentInput = result.toString();
+                waitingForOperand = true;
+                screen.value = formatNumber(parseFloat(result));
+                
+            } catch (error) {
+                updateEquation('');
+                screen.value = 'Error';
+                currentInput = '0';
+                waitingForOperand = true;
+            }
+        }
+
+        function trigFunction(func) {
+            try {
+                let value = parseFloat(currentInput) || 0;
+                let result;
+                let originalValue = currentInput;
+                
+                switch(func) {
+                    case 'sin':
+                        result = Math.sin(value * Math.PI / 180);
+                        updateEquation(`sin(${originalValue}) =`);
+                        break;
+                    case 'cos':
+                        result = Math.cos(value * Math.PI / 180);
+                        updateEquation(`cos(${originalValue}) =`);
+                        break;
+                    case 'tan':
+                        result = Math.tan(value * Math.PI / 180);
+                        updateEquation(`tan(${originalValue}) =`);
+                        break;
+                    case 'log':
+                        if (value <= 0) throw new Error('Invalid input for log');
+                        result = Math.log10(value);
+                        updateEquation(`log(${originalValue}) =`);
+                        break;
+                    default:
+                        throw new Error('Unknown function');
+                }
+                
+                currentInput = result.toString();
+                waitingForOperand = true;
+                screen.value = formatNumber(parseFloat(result));
+                
+            } catch (error) {
+                updateEquation('');
+                screen.value = 'Error';
+                currentInput = '0';
+                waitingForOperand = true;
+            }
+        }
+
+        function factorial() {
+            try {
+                let num = parseInt(currentInput);
+                let originalValue = currentInput;
+                if (num < 0 || num > 170) {
+                    throw new Error('Invalid input for factorial');
+                }
+                
+                let result = 1;
+                for (let i = 2; i <= num; i++) {
+                    result *= i;
+                }
+                
+                updateEquation(`${originalValue}! =`);
+                currentInput = result.toString();
+                waitingForOperand = true;
+                screen.value = formatNumber(parseFloat(result));
+                
+            } catch (error) {
+                updateEquation('');
+                screen.value = 'Error';
+                currentInput = '0';
+                waitingForOperand = true;
+            }
+        }
+
+        function squareRoot() {
+            try {
+                let value = parseFloat(currentInput) || 0;
+                let originalValue = currentInput;
+                if (value < 0) {
+                    throw new Error('Invalid input for square root');
+                }
+                
+                let result = Math.sqrt(value);
+                updateEquation(`√(${originalValue}) =`);
+                currentInput = result.toString();
+                waitingForOperand = true;
+                screen.value = formatNumber(parseFloat(result));
+                
+            } catch (error) {
+                updateEquation('');
+                screen.value = 'Error';
+                currentInput = '0';
+                waitingForOperand = true;
+            }
+        }
+
+        function powerFunction() {
+            if (currentInput && !waitingForOperand) {
+                currentInput += '^';
+                updateScreen();
+                updateEquation(currentInput);
+            }
+        }
+
+        document.addEventListener('keydown', function(event) {
+            const key = event.key;
+            
+            event.preventDefault();
+            
+            if (key >= '0' && key <= '9' || key === '.') {
+                appendToScreen(key);
+            } else if (key === '+' || key === '-') {
+                appendToScreen(key);
+            } else if (key === '*') {
+                appendToScreen('*');
+            } else if (key === '/') {
+                appendToScreen('/');
+            } else if (key === '^') {
+                powerFunction();
+            } else if (key === 'Enter' || key === '=') {
+                calculate();
+            } else if (key === 'Escape') {
+                clearAll();
+            } else if (key === 'Backspace') {
+                clearEntry();
+            } else if (key === '(' || key === ')') {
+                appendToScreen(key);
+            } else if (key === '%') {
+                appendToScreen('%');
+            }
+        });
+
+        updateScreen();
+    </script>
+</body>
+</html>
